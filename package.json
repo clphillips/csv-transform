@@ -1,0 +1,20 @@
+{
+  "name": "csv-transform",
+  "version": "0.1.0",
+  "description": "Transform CSV files into other text files.",
+  "main": "./src/csv-transform.js",
+  "bin": "./src/index.js",
+  "dependencies": {
+    "cli": "~0.6.6",
+    "csv-parse": "~0.1.0"
+  },
+  "devDependencies": {
+    "mocha": "~2.2.0",
+    "chai": "~2.2.0"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha/"
+  },
+  "author": "Cody Phillips",
+  "license": "MIT"
+}
