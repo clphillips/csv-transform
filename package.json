@@ -1,6 +1,6 @@
 {
   "name": "csv-transform",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Transform CSV files into other text files.",
   "main": "./src/csv-transform.js",
   "bin": "./src/index.js",

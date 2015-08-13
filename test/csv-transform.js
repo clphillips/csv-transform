@@ -1,8 +1,12 @@
 var assert = require('assert');
 var CsvTransform = require('../src/csv-transform');
-var testInstance = new CsvTransform({});
+var testInstance;
 
 describe('CsvTransform', function() {
+  
+  beforeEach(function() {
+    testInstance = new CsvTransform();
+  });
   
   describe('#CsvTransform()', function() {
     it('should accept options and return an instance', function(done) {
@@ -31,14 +35,29 @@ describe('CsvTransform', function() {
       done();
     });
   });
-  /*
-  describe('#main()', function() {
-    it('should require input', function(done) {
-      CsvTransform.main();
-      assert(true, true);
+  
+  describe('#run()', function() {
+    var expected = ['1 A', '1 B', '2 A', '2 B'];
+    var inputFile = './test/fixtures/input.csv';
+    var template = '{{Column 2}} {{Column 1}}';
+    
+    it('should invoke callback with expected data', function(done) {
+      var line = 0;
+      testInstance.setInput(inputFile);
+      testInstance.setTemplate(template);
       
-      return done(err);
+      testInstance.run(function(err, data) {
+        if (err) {
+          return done(err);
+        }
+        assert.equal(expected[line], data);
+        line++;
+        
+        if (line === expected.length) {
+          return done();
+        }
+        return null;
+      });
     });
   });
-  */
 });

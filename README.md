@@ -2,17 +2,20 @@
 
 Transforms a CSV file -- well, any delimited file, really, into another file using a template.
 
-## Basic Usage
+You can use this as a stand alone CLI utility, or as a library in your project.
+
+## Usage
 
 ```sh
 npm install csv-transform
 ```
 
+### As a CLI Utility
 ```sh
 node csv-transform -t '{{colA}} {{colB}}' < input.csv > output.txt
 ```
 
-### Options
+#### Options
 
 - **-t** or **--template** The string to use to transform the input file (i.e. 'The {{col1}} brown {{col2}} jumped over the {{col3}} dog.')
 - **-i** or **--input** Path to the CSV input file.
@@ -25,6 +28,16 @@ node csv-transform -t '{{colA}} {{colB}}' < input.csv > output.txt
 - **-ct** or **--closeTag** The close tag used in the template.
 - **-v** or **--version** This version of csv-transform.
 - **-h** or **--help** Prints help info.
+
+
+### As a Library
+```js
+var CsvTransform = require('csv-transform');
+var options = {};
+var transform = new CsvTransform(options);
+
+transform.run();
+```
 
 ## How it works
 
@@ -48,5 +61,5 @@ When run against our input file it produces the following output:
 
 ```sql
 UPDATE users SET first_name='Roger', last_name='Sherman', email='judgesherman@mailinator.com' WHERE id=1;
-UPDATE users SET first_name='James', last_name='Madison', email='madmanmadison@mailinator.com' WHERE id=1;
+UPDATE users SET first_name='James', last_name='Madison', email='madmanmadison@mailinator.com' WHERE id=2;
 ```
