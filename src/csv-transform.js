@@ -1,9 +1,10 @@
 ;(function() {
   'use strict';
-  
+
   var fs = require('fs');
   var csvParse = require('csv-parse');
-  
+  var events = require('events');
+
   /**
    * Constructor
    *
@@ -21,15 +22,19 @@
    */
   var CsvTransform = module.exports = function CsvTransform(options) {
     options = options || {};
-    
+
     this.options = options.csv || {};
     this.input = options.input || null;
     this.output = options.output || null;
     this.template = options.template || null;
     this.openTag = options.openTag || '{{';
     this.closeTag = options.closeTag || '}}';
+
+    events.EventEmitter.call(this);
   };
-  
+
+  CsvTransform.prototype.__proto__ = events.EventEmitter.prototype;
+
   /**
    * Set input file path
    *
@@ -56,19 +61,19 @@
   CsvTransform.prototype.setTemplate = function setTemplate(template) {
     this.template = template;
   }
-  
+
   /**
    * Process the CSV transformation
    *
    * @param cb {function} The callback executed after each line is parsed
    */
-  CsvTransform.prototype.run = function run(cb) {    
+  CsvTransform.prototype.run = function run(cb) {
     var options = this.options;
     options.columns = true;
-  
+
     var inputStream;
     var outputStream;
-    
+
     if (this.input === null) {
       inputStream = process.stdin;
     } else {
@@ -83,7 +88,8 @@
     
     var _this = this;
 
-    var parser = csvParse(options);    
+    var parser = csvParse(options);
+    var recordsRead = 0;
     parser.on('readable', function readable() {
       var record;
       while((record = parser.read())) {
@@ -93,7 +99,11 @@
         if (typeof cb === 'function') {
           cb(null, result);
         }
+        recordsRead++;
       };
+    });
+    parser.on('finish', function finishedReading() {
+      _this.emit('finish', recordsRead);
     });
     parser.on('error', function error(err) {
       if (typeof cb === 'function') {
@@ -102,7 +112,7 @@
     });
     inputStream.pipe(parser);
   }
-  
+
   /**
    * Replace place holders in template with the given data
    *

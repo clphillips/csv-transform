@@ -33,10 +33,24 @@ node csv-transform -t '{{colA}} {{colB}}' < input.csv > output.txt
 ### As a Library
 ```js
 var CsvTransform = require('csv-transform');
-var options = {};
+var options = {
+  template: '{{colA}} {{colB}}',
+  input: 'input.csv',
+  output: 'output.csv'
+};
 var transform = new CsvTransform(options);
 
-transform.run();
+transform.on('finish', function(recodsProcessed) {
+  console.log('Processed ' + recordsProcessed + ' records');
+});
+
+transform.run(function(err, data) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Formatted record: ' + data);
+  }
+});
 ```
 
 ## How it works

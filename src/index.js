@@ -4,7 +4,7 @@
   var cli = require('cli');
   var CsvTransform = require('./csv-transform');
   var thisPackage = require('../package.json');
-  
+
   cli.parse({
     template: [
       't',
@@ -56,13 +56,13 @@
       'This version of csv-transform.'
     ]
   });
-  
+
   cli.main(function(args, options) {
     if (options.version) {
       console.log(thisPackage.version);
       return;
     }
-    
+
     var requiredOptions = {'template':'t'};
     for (var opt in requiredOptions) {
       if (!options[opt]) {
@@ -70,7 +70,7 @@
         return;
       }
     };
-    
+
     var csvOptions = ['delimiter', 'rowDelimiter', 'quote', 'escape'];
     options.csv = {};
     for (var opt in options) {
@@ -78,9 +78,9 @@
         options.csv.opt = options.opt;
       }
     }
-    
+
     var transform = new CsvTransform(options);
-  
+
     transform.run();
   });
 })();
