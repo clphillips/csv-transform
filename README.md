@@ -7,8 +7,11 @@ You can use this as a stand alone CLI utility, or as a library in your project.
 ## Usage
 
 ```sh
-npm install csv-transform
+npm install csv-transformer
 ```
+
+Note that the package is `csv-transformer`, but the library is `csv-transform`,
+due to namespace conflicts in npm.
 
 ### As a CLI Utility
 ```sh
