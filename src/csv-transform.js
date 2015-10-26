@@ -3,7 +3,8 @@
 
   var fs = require('fs');
   var csvParse = require('csv-parse');
-  var events = require('events');
+  var util = require('util');
+  var EventEmitter = require('events').EventEmitter;
 
   /**
    * Constructor
@@ -20,7 +21,7 @@
    * - openTag {string} The open tag for replacement
    * - closeTag {string} The close tag for replacement
    */
-  var CsvTransform = module.exports = function CsvTransform(options) {
+  function CsvTransform(options) {
     options = options || {};
 
     this.options = options.csv || {};
@@ -30,10 +31,10 @@
     this.openTag = options.openTag || '{{';
     this.closeTag = options.closeTag || '}}';
 
-    events.EventEmitter.call(this);
+    EventEmitter.call(this);
   };
 
-  CsvTransform.prototype.__proto__ = events.EventEmitter.prototype;
+  util.inherits(CsvTransform, EventEmitter);
 
   /**
    * Set input file path
@@ -42,7 +43,7 @@
    */
   CsvTransform.prototype.setInput = function setInput(input) {
     this.input = input;
-  }
+  };
 
   /**
    * Set output file path
@@ -51,7 +52,7 @@
    */
   CsvTransform.prototype.setOutput = function setOutput(output) {
     this.output = output;
-  }
+  };
 
   /**
    * Set template string
@@ -60,12 +61,12 @@
    */
   CsvTransform.prototype.setTemplate = function setTemplate(template) {
     this.template = template;
-  }
+  };
 
   /**
    * Process the CSV transformation
    *
-   * @param cb {function} The callback executed after each line is parsed
+   * @param cb {function} The callback executed after each line is parsed. Deprecated since 1.1
    */
   CsvTransform.prototype.run = function run(cb) {
     var options = this.options;
@@ -79,13 +80,13 @@
     } else {
       inputStream = fs.createReadStream(this.input);
     }
-    
+
     if (this.output === null) {
       outputStream = process.stdout;
     } else {
       outputStream = fs.createWriteStream(this.output);
     }
-    
+
     var _this = this;
 
     var parser = csvParse(options);
@@ -94,11 +95,15 @@
       var record;
       while((record = parser.read())) {
         var result = _this.replace(_this.template, record);
+
         outputStream.write(result + '\n');
-        
+
         if (typeof cb === 'function') {
           cb(null, result);
         }
+
+        _this.emit('read', result, record);
+
         recordsRead++;
       };
     });
@@ -111,7 +116,7 @@
       }
     });
     inputStream.pipe(parser);
-  }
+  };
 
   /**
    * Replace place holders in template with the given data
@@ -125,5 +130,7 @@
       template = template.replace(this.openTag + field + this.closeTag, data[field]);
     }
     return template;
-  }
+  };
+
+  module.exports = CsvTransform;
 })();

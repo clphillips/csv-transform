@@ -43,11 +43,16 @@ var options = {
 };
 var transform = new CsvTransform(options);
 
-transform.on('finish', function(recodsProcessed) {
+transform.on('read', function (result, data) {
+  console.log('Read line ' + result);
+});
+
+transform.on('finish', function (recodsProcessed) {
   console.log('Processed ' + recordsProcessed + ' records');
 });
 
-transform.run(function(err, data) {
+// Deprecated, use .on('read') instead.
+transform.run(function (err, data) {
   if (err) {
     console.log(err);
   } else {
@@ -55,6 +60,11 @@ transform.run(function(err, data) {
   }
 });
 ```
+
+#### Events
+
+- **read**( *string* result, *object* data ) - Triggered when a line is read and processed from the CSV file.
+- **finish**( *int* recordsProcessed ) - Triggered when the file has finished processing.
 
 ## How it works
 
