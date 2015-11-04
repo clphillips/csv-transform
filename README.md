@@ -1,4 +1,4 @@
-# csv-transform
+# csv-transformer
 
 Transforms a CSV file -- well, any delimited file, really, into another file using a template.
 
@@ -7,15 +7,12 @@ You can use this as a stand alone CLI utility, or as a library in your project.
 ## Usage
 
 ```sh
-npm install csv-transformer
+npm install -g csv-transformer
 ```
-
-Note that the package is `csv-transformer`, but the library is `csv-transform`,
-due to namespace conflicts in npm.
 
 ### As a CLI Utility
 ```sh
-node csv-transform -t '{{colA}} {{colB}}' < input.csv > output.txt
+csv-transformer -t '{{colA}} {{colB}}' < input.csv > output.txt
 ```
 
 #### Options
@@ -35,19 +32,19 @@ node csv-transform -t '{{colA}} {{colB}}' < input.csv > output.txt
 
 ### As a Library
 ```js
-var CsvTransform = require('csv-transform');
+var CsvTransformer = require('csv-transformer');
 var options = {
   template: '{{colA}} {{colB}}',
   input: 'input.csv',
   output: 'output.csv'
 };
-var transform = new CsvTransform(options);
+var transform = new CsvTransformer(options);
 
 transform.on('read', function (result, data) {
   console.log('Read line ' + result);
 });
 
-transform.on('finish', function (recodsProcessed) {
+transform.on('finish', function (recordsProcessed) {
   console.log('Processed ' + recordsProcessed + ' records');
 });
 
@@ -68,7 +65,7 @@ transform.run(function (err, data) {
 
 ## How it works
 
-The columns defined in the first row of the input file become variable names. **csv-transform** accepts a template that is used to output a separate row for each input row based upon these variables.
+The columns defined in the first row of the input file become variable names. **csv-transformer** accepts a template that is used to output a separate row for each input row based upon these variables.
 
 Assume you have the following input file:
 
