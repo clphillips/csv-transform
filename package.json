@@ -6,7 +6,7 @@
   "bin": "./src/index.js",
   "dependencies": {
     "cli": "~0.6.6",
-    "csv-parse": "~0.1.0"
+    "csv-parse": "~4.15.3"
   },
   "devDependencies": {
     "mocha": "~2.2.0",
